@@ -1,0 +1,24 @@
+
+.app-bg {
+  color: #84E8BB;
+  width: 100px;
+  height: 100px;
+}
+
+.spinner {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  background: #247BA0;
+  color: #FFFFFF;
+}
+
+@font-face {
+  font-family: 'Pacifico', cursive;
+  src: ur("https://fonts.googleapis.com/css?family=Pacifico");
+}
+
+
+body {
+  font-family: 'Pacifico', cursive;
+}
