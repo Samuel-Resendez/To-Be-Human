@@ -49,7 +49,7 @@ export default class Question extends Component {
         var styles = _.cloneDeep(this.constructor.styles);
         var components = [];
         var selectedState = [0,1,2,3];
-        for(var i =0; i < 4; i++) {
+        for(var i =0; i < this.props.numAnswers; i++) {
             components.push(
                 this.getComponent(i)
             )

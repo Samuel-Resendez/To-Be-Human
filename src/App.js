@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import barChart from './components/barChart.js';
 import {
   Wave,
   ChasingDots,
@@ -22,6 +22,7 @@ class App extends Component {
 
     this.state = {
       isLoading: false,
+      renderGraphs: false,
     }
     
     WebFont.load({
@@ -38,6 +39,17 @@ class App extends Component {
      var answers = ["Great!","Can't complain","Eh","Terrible"];
      var q2Answers = ["Yep, Right now!","About an hour ago","Earlier today","Yesterday, maybe"];
      var q3Answers = ["Yeah, I can't wait!","Yeah, sure","Not particularly","Not at all"];
+     var q4Answers = ["On the daily","2-3 times a week","2-3 times a month","Rarely","Never"];
+   
+     
+     var loadingBar = [];
+     if(this.state.isLoading) {
+       loadingBar.push(
+         <div style={styles.loadingCont}>
+          <ThreeBounce size={30} color='#2081C3' />
+        </div>
+       )
+     }
 
     return (
      <div style={styles.bg}>
@@ -47,14 +59,25 @@ class App extends Component {
        </div>
       
       <div style={styles.introText}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi quam odio, suscipit id pulvinar blandit, scelerisque et eros. Nunc dictum gravida urna, id varius nisl finibus at. Curabitur ut tortor aliquet tortor laoreet tempor. Nam fringilla blandit ligula, sit amet vehicula turpis. Integer nec elementum nisi. Sed quis scelerisque nisl. Aliquam at semper eros. Donec eu lobortis elit, in varius nunc. Cras non massa in nisl scelerisque elementum. Cras quam justo, interdum ac eleifend in, porta et felis. Curabitur id euismod diam. Aliquam sed lorem in turpis tincidunt pretium. Sed dictum arcu mattis molestie cursus.
+       
+       To be human is just a survey with the intent to gauge how people feel in the day to day, in other words, how it is
+       to be human. The idea is pretty simple, but if you're curious what others have responded with, feel free and go ahead
+       and answer the questions and find out. If you feel that theres other questions 
+       you think would be worth asking, let me know. Cheers!
       </div>
-      <Question question="How are you doing today?" answers={answers} />
+      <Question question="How are you doing today?" answers={answers} numAnswers={4}/>
       <div style={styles.divider}/>
-      <Question question="Have you eaten recently?" answers={q2Answers} />
+     
+      <Question question="Anything you're looking forward to?" answers={q3Answers} numAnswers={4}/>
       <div style={styles.divider} />
-      <Question question="Anything you're looking forward to?" answers={q3Answers} />
+
+       <Question question="Have you eaten recently?" answers={q2Answers} numAnswers={4} />
       <div style={styles.divider} />
+
+
+      <Question question="How often do you get exercise?" answers={q4Answers} numAnswers={5} />
+      <div style={styles.divider} />
+
 
 
       <div style={button.submitCont}>
@@ -65,9 +88,8 @@ class App extends Component {
      
       
       <div style={styles.divider} />
-       <div style={styles.loadingCont}>
-        <ThreeBounce size={30} color='#2081C3' />
-       </div>
+      {loadingBar}
+      <barChart />
     
       
      </div>
