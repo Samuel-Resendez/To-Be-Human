@@ -92,7 +92,12 @@ class App extends Component {
       
       <div style={styles.divider} />
       {loadingBar}
-    
+      <div style={styles.alignCont}>
+        <BarChart />
+          <div style={styles.divider} />
+        <BarChart />
+      </div>
+      
     
       
      </div>
@@ -101,6 +106,7 @@ class App extends Component {
 }
 
 App.button = {
+  
   submitCont :{
    
     marginLeft: 'auto',
@@ -131,6 +137,13 @@ App.button = {
 }
 
 App.styles = {
+
+  alignCont : {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: 600,
+    
+  },
   divider :{
     height: 100,
   },
