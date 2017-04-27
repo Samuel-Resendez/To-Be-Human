@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import barChart from './components/barChart.js';
+import BarChart from './components/barChart.js';
 import {
   Wave,
   ChasingDots,
@@ -13,6 +13,9 @@ import {
  
 } from 'better-react-spinkit'
 var WebFont = require('webfontloader');
+
+
+
 
 var _ = require('lodash');
 import Question from './components/question.js';
@@ -89,7 +92,7 @@ class App extends Component {
       
       <div style={styles.divider} />
       {loadingBar}
-      <barChart />
+    
     
       
      </div>
@@ -134,7 +137,7 @@ App.styles = {
   bg: {
     backgroundColor: "#A1B5D8",
     opacity: '0.9',
-    height: '300vh',
+    height: '500vh',
     width: '100vw',
     padding: 10,
     
