@@ -23,7 +23,7 @@ export default class Question extends Component {
         if(this.state.selectedButton === index) {
                 return(
                     <button style={styles.selectedStyle} onClick={() => {
-                       
+                       this.props.updatePar(this.props.qNum, index);
                 this.setState({ selectedButton: index });
                  }} >
                     <div style={styles.buttonText}> {ans[index]} </div>
@@ -32,10 +32,10 @@ export default class Question extends Component {
             }
             else {
                 var text = ans[index];
-                console.log(ans);
-                console.log(text);
+                
                 return (
                     <button style={styles.buttonStyle} onClick={() => {
+                         this.props.updatePar(this.props.qNum, index);
                         this.setState({ selectedButton: index }); }} >
                     <div style={styles.buttonText}> {text} </div>
                 </button>

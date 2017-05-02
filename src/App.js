@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import BarChart from './components/barChart.js';
+import SumBarChart from './components/barChart.js';
 import {
   Wave,
   ChasingDots,
@@ -15,6 +15,17 @@ import {
 var WebFont = require('webfontloader');
 
 
+const data = [
+  {quarter: 1, earnings: 13000},
+  {quarter: 2, earnings: 16500},
+  {quarter: 3, earnings: 14250},
+  {quarter: 4, earnings: 19000}
+];
+
+
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryContainer,VictoryTheme } from 'victory';
+
+
 
 
 var _ = require('lodash');
@@ -26,6 +37,7 @@ class App extends Component {
     this.state = {
       isLoading: false,
       renderGraphs: false,
+      answers: [-1,-1,-1,-1],
     }
     
     WebFont.load({
@@ -33,8 +45,23 @@ class App extends Component {
       families: ['Pacifico',"Slabo 27px",'Open Sans Condensed','Dosis']
     }
   });
+  this.updateUserAnswers = this.updateUserAnswers.bind(this);
+}
+
+  updateUserAnswers(questionNum, answer) {
+    var newArr = this.state.answers;
+    newArr[questionNum-1] = answer;
+    this.setState({
+      answers: newArr,
+    });
   }
+
+
+
+
   render() {
+
+    console.log(this.state.answers);
 
      var styles = _.cloneDeep(this.constructor.styles);
      var button = _.cloneDeep(this.constructor.button);
@@ -63,22 +90,40 @@ class App extends Component {
       
       <div style={styles.introText}>
        
-       To be human is just a survey with the intent to gauge how people feel in the day to day, in other words, how it is
-       to be human. The idea is pretty simple, but if you're curious what others have responded with, feel free and go ahead
+       To be human is just a survey with the intent to gauge how people feel in the day to day by asking some very basic questions. The idea is pretty simple, but if you're curious what others have responded with, feel free and go ahead
        and answer the questions and find out. If you feel that theres other questions 
        you think would be worth asking, let me know. Cheers!
       </div>
-      <Question question="How are you doing today?" answers={answers} numAnswers={4}/>
+      <Question 
+      question="How are you doing today?" 
+      qNum={1} 
+      updatePar={this.updateUserAnswers}
+      answers={answers} 
+      numAnswers={4}/>
       <div style={styles.divider}/>
      
-      <Question question="Anything you're looking forward to?" answers={q3Answers} numAnswers={4}/>
+      <Question 
+      question="Anything you're looking forward to?" 
+      updatePar={this.updateUserAnswers}
+      qNum={2} 
+      answers={q3Answers} 
+      numAnswers={4}/>
       <div style={styles.divider} />
 
-       <Question question="Have you eaten recently?" answers={q2Answers} numAnswers={4} />
+       <Question question="Have you eaten recently?"
+      qNum={3} 
+      updatePar={this.updateUserAnswers}
+      answers={q2Answers} 
+      numAnswers={4} />
       <div style={styles.divider} />
 
 
-      <Question question="How often do you get exercise?" answers={q4Answers} numAnswers={5} />
+      <Question 
+      question="How often do you get exercise?" 
+      qNum={4} //Used to update the current user responses
+      updatePar={this.updateUserAnswers}
+      answers={q4Answers} 
+      numAnswers={5} />
       <div style={styles.divider} />
 
 
@@ -93,9 +138,32 @@ class App extends Component {
       <div style={styles.divider} />
       {loadingBar}
       <div style={styles.alignCont}>
-        <BarChart />
-          <div style={styles.divider} />
-        <BarChart />
+      <span style={styles.textStyle}> Question 1 </span>
+      <VictoryChart
+        // domainPadding will add space to each side of VictoryBar to
+        // prevent it from overlapping the axis
+        domainPadding={20}
+        title="Question 1"
+        
+      >
+        <VictoryAxis
+          // tickValues specifies both the number of ticks and where
+          // they are placed on the axis
+          tickValues={[1, 2, 3, 4]}
+          tickFormat={answers}
+        />
+        <VictoryAxis
+          dependentAxis
+          // tickFormat specifies how ticks should be displayed
+          tickFormat={(x) => (`${x / 200}%`)}
+        />
+        <VictoryBar
+          data={data}
+          x="quarter"
+          y="earnings"
+        />
+      </VictoryChart>
+    
       </div>
       
     
@@ -139,6 +207,7 @@ App.button = {
 App.styles = {
 
   alignCont : {
+    textAlign: 'center',
     marginLeft: 'auto',
     marginRight: 'auto',
     width: 600,
