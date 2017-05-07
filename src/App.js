@@ -32,12 +32,15 @@ var _ = require('lodash');
 import Question from './components/question.js';
 class App extends Component {
   constructor(props) {
+    
     super(props);
-
+    document.title = "To Be Human";
     this.state = {
       isLoading: false,
       renderGraphs: false,
       answers: [-1,-1,-1,-1],
+      loadingComplete: false,
+      serverData: null,
     }
     
     WebFont.load({
@@ -66,11 +69,156 @@ class App extends Component {
      var styles = _.cloneDeep(this.constructor.styles);
      var button = _.cloneDeep(this.constructor.button);
     
-     var answers = ["Great!","Can't complain","Eh","Terrible"];
+     var answers =   ["Great!","Can't complain","Eh","Terrible"];
      var q2Answers = ["Yep, Right now!","About an hour ago","Earlier today","Yesterday, maybe"];
      var q3Answers = ["Yeah, I can't wait!","Yeah, sure","Not particularly","Not at all"];
      var q4Answers = ["On the daily","2-3 times a week","2-3 times a month","Rarely","Never"];
    
+     var graphs = [];
+     if(this.state.serverData !== null) {
+       console.log("Heres the data being passed: ");
+       console.log(this.state.serverData.q1);
+        graphs.push(
+           <span style={styles.textStyle}> Question 1 </span>
+        )
+        graphs.push(
+           <VictoryChart
+           theme={VictoryTheme.material}
+        // domainPadding will add space to each side of VictoryBar to
+        // prevent it from overlapping the axis
+        width={800}
+        height={500}
+        padding={30}
+        domainPadding={80}
+        title="Question 1"
+        
+      >
+        <VictoryAxis
+          // tickValues specifies both the number of ticks and where
+          // they are placed on the axis
+          tickValues={[1, 2, 3, 4]}
+          tickFormat={answers}
+          style={{tickLabels: {fontSize: 20}}}
+        />
+        <VictoryAxis
+          dependentAxis
+          // tickFormat specifies how ticks should be displayed
+         
+        />
+        <VictoryBar
+        style={{data:{width: 80, padding: 10}}}
+          data={this.state.serverData.q1}
+          x="questionNum"
+          y="A"
+        />
+        </VictoryChart>
+        )
+        graphs.push(
+           <span style={styles.textStyle}> Question 2 </span>
+        )
+        graphs.push(
+           <VictoryChart
+
+            theme={VictoryTheme.material}
+        
+            width={800}
+            height={500}
+            // domainPadding will add space to each side of VictoryBar to
+            // prevent it from overlapping the axis
+            domainPadding={80}
+            title="Question 1"
+        
+      >
+        <VictoryAxis
+          // tickValues specifies both the number of ticks and where
+          // they are placed on the axis
+          tickValues={[1, 2, 3, 4]}
+          tickFormat={q2Answers}
+        />
+        <VictoryAxis
+          dependentAxis
+          // tickFormat specifies how ticks should be displayed
+         
+        />
+        <VictoryBar
+          style={{data:{width: 80, padding: 10}}}
+          data={this.state.serverData.q2}
+          x="questionNum"
+          y="A"
+        />
+        </VictoryChart>
+        )
+         graphs.push(
+           <span style={styles.textStyle}> Question 3 </span>
+        )
+        graphs.push(
+           <VictoryChart
+
+            theme={VictoryTheme.material}
+        
+            width={800}
+            height={500}
+            // domainPadding will add space to each side of VictoryBar to
+            // prevent it from overlapping the axis
+            domainPadding={80}
+            title="Question 1"
+        
+      >
+        <VictoryAxis
+          // tickValues specifies both the number of ticks and where
+          // they are placed on the axis
+          tickValues={[1, 2, 3, 4]}
+          tickFormat={q3Answers}
+        />
+        <VictoryAxis
+          dependentAxis
+          // tickFormat specifies how ticks should be displayed
+         
+        />
+        <VictoryBar
+          style={{data:{width: 80, padding: 10}}}
+          data={this.state.serverData.q3}
+          x="questionNum"
+          y="A"
+        />
+        </VictoryChart>
+        )
+         graphs.push(
+           <span style={styles.textStyle}> Question 4 </span>
+        )
+        graphs.push(
+           <VictoryChart
+
+            theme={VictoryTheme.material}
+        
+            width={800}
+            height={500}
+            // domainPadding will add space to each side of VictoryBar to
+            // prevent it from overlapping the axis
+            domainPadding={80}
+            title="Question 1"
+        
+      >
+        <VictoryAxis
+          // tickValues specifies both the number of ticks and where
+          // they are placed on the axis
+          tickValues={[1, 2, 3, 4]}
+          tickFormat={q4Answers}
+        />
+        <VictoryAxis
+          dependentAxis
+          // tickFormat specifies how ticks should be displayed
+         
+        />
+        <VictoryBar
+          style={{data:{width: 80, padding: 10}}}
+          data={this.state.serverData.q4}
+          x="questionNum"
+          y="A"
+        />
+        </VictoryChart>
+        )
+     }
      
      var loadingBar = [];
      if(this.state.isLoading) {
@@ -129,7 +277,96 @@ class App extends Component {
 
 
       <div style={button.submitCont}>
-       <button style={button.buttonStyle} onClick={() => {this.setState({isLoading: true})}}>
+       <button style={button.buttonStyle} onClick={() => {
+         this.setState({isLoading: true})
+         var q1R = this.state.answers[0];
+         var q2R = this.state.answers[1];
+         var q3R = this.state.answers[2];
+         var q4R = this.state.answers[3];
+         data = {
+           q1: q1R,
+           q2: q2R,
+           q3: q3R,
+           q4: q4R,
+         }
+         fetch("http://tbh-server.ctpwh7imjp.us-west-1.elasticbeanstalk.com/TBH/entries/",{
+           headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+           },
+           method: "POST",
+           body: JSON.stringify(data)
+         }).then((res)=>{console.log(res)})
+         .catch((err)=>{console.log(err)})
+         
+
+         //This ones to load the data 
+         fetch("http://tbh-server.ctpwh7imjp.us-west-1.elasticbeanstalk.com/TBH/entries/?format=json",{
+           headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+           },
+           method: "GET"
+         }).then((res) => {
+           res.json().then((data)=>{
+             console.log(this.state);
+
+             var aggDat = {
+               q1 : [
+                { A : 0, questionNum: 1 },
+                { A : 0, questionNum: 2 },
+                { A : 0, questionNum: 3 },
+                { A : 0, questionNum: 4 },
+               ],
+               q2 : [
+                {A : 0, questionNum: 1 },
+                {A : 0, questionNum: 2 },
+                {A : 0, questionNum: 3 },
+                {A : 0, questionNum: 4 },
+               ],
+               q3 : [
+                {A : 0, questionNum: 1 },
+                {A : 0, questionNum: 2 },
+                {A : 0, questionNum: 3 },
+                {A : 0, questionNum: 4 },
+               ],
+               q4 : [
+                {A : 0, questionNum: 1 },
+                {A : 0, questionNum: 2 },
+                {A : 0, questionNum: 3 },
+                {A : 0, questionNum: 4 }, 
+               ]
+             }
+             
+            for(var i = 0; i < data.length; i++) {
+              for(var j = 1; j < 5; j++) {
+                var pre = 'q' + j.toString();
+                switch(data[i][pre]) {
+                  case 0:
+                      aggDat[pre][0]['A'] += 1
+                      break
+                  case 1:
+                      aggDat[pre][1]['A'] += 1
+                      break
+                  case 2:
+                      aggDat[pre][2]['A'] += 1
+                      break
+                  case 3:
+                      aggDat[pre][3]['A'] += 1
+                  default:
+                      break
+                }
+              }
+            }
+            this.setState({
+              isLoading: false,
+              serverData: aggDat,
+            });
+            console.log(this.state.serverData);
+           })
+         }).catch((err)=>{console.log(err)})
+         
+         }}>
         <div style={button.buttonText}> Submit Answers </div>
       </button>
       </div>
@@ -138,36 +375,10 @@ class App extends Component {
       <div style={styles.divider} />
       {loadingBar}
       <div style={styles.alignCont}>
-      <span style={styles.textStyle}> Question 1 </span>
-      <VictoryChart
-        // domainPadding will add space to each side of VictoryBar to
-        // prevent it from overlapping the axis
-        domainPadding={20}
-        title="Question 1"
-        
-      >
-        <VictoryAxis
-          // tickValues specifies both the number of ticks and where
-          // they are placed on the axis
-          tickValues={[1, 2, 3, 4]}
-          tickFormat={answers}
-        />
-        <VictoryAxis
-          dependentAxis
-          // tickFormat specifies how ticks should be displayed
-          tickFormat={(x) => (`${x / 200}%`)}
-        />
-        <VictoryBar
-          data={data}
-          x="quarter"
-          y="earnings"
-        />
-      </VictoryChart>
+     
+      {graphs}
     
       </div>
-      
-    
-      
      </div>
     );
   }
@@ -219,7 +430,7 @@ App.styles = {
   bg: {
     backgroundColor: "#A1B5D8",
     opacity: '0.9',
-    height: '500vh',
+    height: '600vh',
     width: '100vw',
     padding: 10,
     
